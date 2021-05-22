@@ -188,6 +188,16 @@ $('#product_id_text_input').on('blur', function(e)
 						Grocy.Components.ProductPicker.SetValue('');
 					}
 				},
+				lookupnewproduct: {
+					label: '<strong>P</strong> ' + __t('Lookup new product'),
+					className: 'btn-success add-new-product-dialog-button responsive-button ' + addProductWorkflowsAdditionalCssClasses,
+					callback: function()
+					{
+
+						Grocy.Components.ProductPicker.PopupOpen = false;
+						window.location.href = U('/product/lookup?flow=InplaceNewProductWithBarcode&barcode=' + encodeURIComponent(input) + '&returnto=' + encodeURIComponent(Grocy.CurrentUrlRelative + "?flow=InplaceAddBarcodeToExistingProduct&barcode=" + input + "&" + embedded) + "&" + embedded);
+					}
+				},
 				addnewproduct: {
 					label: '<strong>P</strong> ' + __t('Add as new product'),
 					className: 'btn-success add-new-product-dialog-button responsive-button ' + addProductWorkflowsAdditionalCssClasses,

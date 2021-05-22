@@ -148,6 +148,21 @@ class StockController extends BaseController
 				'mode' => 'create'
 			]);
 		}
+		elseif ($args['productId'] == 'lookup')
+		{
+			$params = (array)$request->getQueryParams();
+			 return $this->renderPage($response, 'productlookup', ['junk' => $params,
+				'locations' => $this->getDatabase()->locations()->orderBy('name'),
+				'barcodes' => $this->getDatabase()->product_barcodes()->orderBy('barcode'),
+				'quantityunits' => $this->getDatabase()->quantity_units()->orderBy('name', 'COLLATE NOCASE'),
+				'shoppinglocations' => $this->getDatabase()->shopping_locations()->orderBy('name', 'COLLATE NOCASE'),
+				'productgroups' => $this->getDatabase()->product_groups()->orderBy('name', 'COLLATE NOCASE'),
+				'userfields' => $this->getUserfieldsService()->GetFields('products'),
+				'products' => $this->getDatabase()->products()->where('parent_product_id IS NULL and active = 1')->orderBy('name', 'COLLATE NOCASE'),
+				'isSubProductOfOthers' => false,
+				'mode' => 'create'
+			]);
+		}
 		else
 		{
 			$product = $this->getDatabase()->products($args['productId']);
@@ -168,6 +183,45 @@ class StockController extends BaseController
 				'productBarcodeUserfieldValues' => $this->getUserfieldsService()->GetAllValues('product_barcodes')
 			]);
 		}
+	}
+
+	public function ProductExternalLookup(\Psr\Http\Message\ServerRequestInterface $request, \Psr\Http\Message\ResponseInterface $response, array $args)
+	{
+	//	print_r $args;
+		// if ($args['productId'] == 'new')
+		// {
+		// 	return $this->renderPage($response, 'productform', [
+		// 		'locations' => $this->getDatabase()->locations()->orderBy('name'),
+		// 		'barcodes' => $this->getDatabase()->product_barcodes()->orderBy('barcode'),
+		// 		'quantityunits' => $this->getDatabase()->quantity_units()->orderBy('name', 'COLLATE NOCASE'),
+		// 		'shoppinglocations' => $this->getDatabase()->shopping_locations()->orderBy('name', 'COLLATE NOCASE'),
+		// 		'productgroups' => $this->getDatabase()->product_groups()->orderBy('name', 'COLLATE NOCASE'),
+		// 		'userfields' => $this->getUserfieldsService()->GetFields('products'),
+		// 		'products' => $this->getDatabase()->products()->where('parent_product_id IS NULL and active = 1')->orderBy('name', 'COLLATE NOCASE'),
+		// 		'isSubProductOfOthers' => false,
+		// 		'mode' => 'create'
+		// 	]);
+
+		// else
+		// {
+		// 	$product = $this->getDatabase()->products($args['productId']);
+		//
+		// 	return $this->renderPage($response, 'productform', [
+		// 		'product' => $product,
+		// 		'locations' => $this->getDatabase()->locations()->orderBy('name', 'COLLATE NOCASE'),
+		// 		'barcodes' => $this->getDatabase()->product_barcodes()->orderBy('barcode'),
+		// 		'quantityunits' => $this->getDatabase()->quantity_units()->orderBy('name', 'COLLATE NOCASE'),
+		// 		'shoppinglocations' => $this->getDatabase()->shopping_locations()->orderBy('name', 'COLLATE NOCASE'),
+		// 		'productgroups' => $this->getDatabase()->product_groups()->orderBy('name', 'COLLATE NOCASE'),
+		// 		'userfields' => $this->getUserfieldsService()->GetFields('products'),
+		// 		'products' => $this->getDatabase()->products()->where('id != :1 AND parent_product_id IS NULL and active = 1', $product->id)->orderBy('name', 'COLLATE NOCASE'),
+		// 		'isSubProductOfOthers' => $this->getDatabase()->products()->where('parent_product_id = :1', $product->id)->count() !== 0,
+		// 		'mode' => 'edit',
+		// 		'quConversions' => $this->getDatabase()->quantity_unit_conversions(),
+		// 		'productBarcodeUserfields' => $this->getUserfieldsService()->GetFields('product_barcodes'),
+		// 		'productBarcodeUserfieldValues' => $this->getUserfieldsService()->GetAllValues('product_barcodes')
+		// 	]);
+		// }
 	}
 
 	public function ProductGroupEditForm(\Psr\Http\Message\ServerRequestInterface $request, \Psr\Http\Message\ResponseInterface $response, array $args)
